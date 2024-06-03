@@ -2,15 +2,18 @@ import os
 import torch
 from typing import List
 from deepchem.utils.dft_utils import CGTOBasis
+import warnings
+import logging
 try:
     import basis_set_exchange as bse
 except Exception as e:
-    print(f'basis-set-exchange Not Found: {e}')
+    warnings.warn(f'basis-set-exchange Not Found: {e}')
 
 __all__ = ["loadbasis"]
 
 _dtype = torch.double
 _device = torch.device("cpu")
+logger = logging.getLogger(__name__)
 
 
 def loadbasis(cmd: str, dtype: torch.dtype = _dtype,
@@ -158,7 +161,7 @@ def _get_basis_file(cmd: str) -> str:
 
     # if the file does not exist, download it
     if not os.path.exists(fpath):
-        print(
+        logger.info(
             "The %s basis for atomz %d does not exist, but we will download it"
             % (raw_basisname, atomz))
         if not os.path.exists(fdir):
